@@ -304,7 +304,7 @@ end
 
 -- Teleport to Pizza Shop Left Door
 local function teleportToPizzaShopLeftDoor(player)
-    displayHintCountdown(20, "Teleporting to Pizza Shop Left Door")
+    displayHintCountdown(100, "Teleporting to Pizza Shop Left Door")
     local pizzaShopLeftDoor = workspace.Interiors:FindFirstChild("PizzaShop") and workspace.Interiors.PizzaShop:FindFirstChild("Doors") 
         and workspace.Interiors.PizzaShop.Doors:FindFirstChild("MainDoor") 
         and workspace.Interiors.PizzaShop.Doors.MainDoor:FindFirstChild("Left") 
@@ -353,7 +353,7 @@ end
 
 -- Function to teleport to School TouchToEnter after countdown
 local function teleportToSchoolTouchToEnter(player)
-    displayHintCountdown(20, "Teleporting to School Main Door")
+    displayHintCountdown(100, "Teleporting to School Main Door")
     local touchToEnter
     repeat
         touchToEnter = findSchoolTouchToEnter()
@@ -370,7 +370,7 @@ local function teleportToSalonInteriorOrigin(player)
         salonInteriorOrigin = workspace.Interiors:FindFirstChild("Salon") and workspace.Interiors.Salon:FindFirstChild("InteriorOrigin")
         if salonInteriorOrigin then
             instantTeleport(player, salonInteriorOrigin.CFrame)
-            displayHintCountdown(20, "You have entered the Salon Shop!")
+            displayHintCountdown(100, "You have entered the Salon Shop!")
             break -- Exit the loop after teleporting once
         end
         wait(1)
@@ -408,7 +408,7 @@ local function teleportToCampsiteOrigin(player)
         campsiteOrigin.Transparency = 0 -- Make it visible
         campsiteOrigin.CanCollide = true -- Ensure it can be stood on
         
-        displayHintCountdown(40, "You are now at the Campsite! Standing by...")
+        displayHintCountdown(100, "You are now at the Campsite! Standing by...")
     else
         error("CampsiteOrigin not found!")
     end
