@@ -68,6 +68,26 @@ task.wait("3")
 -- Flag to track subscription status
 local hasSubscribed = false
 
+--pickup selected pet
+
+local pets = workspace.Pets:GetChildren()
+
+-- Assuming you have a GUI where the user can select their pet
+-- This part would typically be in the UI event handler
+
+-- Example: user selects the first pet for demonstration
+local userSelectedPet = pets[1] -- Replace with actual user selection logic
+
+if userSelectedPet then
+    local args = {
+        [1] = userSelectedPet
+    }
+    game:GetService("ReplicatedStorage").API.HoldBaby:FireServer(unpack(args))
+else
+    warn("Please select a pet.")
+
+end
+
 -- Ensure Title GUI exists
 local function ensureTitleLabelExists()
     local player = game.Players.LocalPlayer
@@ -83,7 +103,7 @@ local function ensureTitleLabelExists()
         titleLabel.Name = "TitleLabel"
         titleLabel.Size = UDim2.new(1, 0, 0.1, 0) -- Full width, 10% height
         titleLabel.Position = UDim2.new(0, 0, 0, 0) -- Top of the screen
-        titleLabel.Text = "PET AUTOFARM V1 IN DEVELOPMENT DEBUGGING"
+        titleLabel.Text = "PET AUTOFARM V1 IN DEV"
         titleLabel.BackgroundColor3 = Color3.fromRGB(150, 150, 255) -- Background color
         titleLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
         titleLabel.Font = Enum.Font.SourceSansBold
