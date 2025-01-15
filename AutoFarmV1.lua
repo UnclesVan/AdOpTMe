@@ -97,7 +97,6 @@ local function ensureTitleLabelExists()
         titleScreen = Instance.new("ScreenGui")
         titleScreen.Name = "TitleScreen"
         titleScreen.Parent = player.PlayerGui
-
         -- Create a title label for the UI
         local titleLabel = Instance.new("TextLabel")
         titleLabel.Name = "TitleLabel"
@@ -177,6 +176,26 @@ local function instantTeleport(player, targetCFrame)
             end
         end
     end
+end
+
+--pickup selected pet
+
+local pets = workspace.Pets:GetChildren()
+
+-- Assuming you have a GUI where the user can select their pet
+-- This part would typically be in the UI event handler
+
+-- Example: user selects the first pet for demonstration
+local userSelectedPet = pets[1] -- Replace with actual user selection logic
+
+if userSelectedPet then
+    local args = {
+        [1] = userSelectedPet
+    }
+    game:GetService("ReplicatedStorage").API.HoldBaby:FireServer(unpack(args))
+else
+    warn("Please select a pet.")
+
 end
 
 -- Function to unsubscribe from house
