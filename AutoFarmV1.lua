@@ -70,8 +70,6 @@ local hasSubscribed = false
 
 -- Pickup selected pet
 local pets = workspace.Pets:GetChildren()
-
--- Example: user selects the first pet for demonstration
 local userSelectedPet = pets[1] -- Replace with actual user selection logic
 
 if userSelectedPet then
@@ -291,19 +289,6 @@ local function teleportToPizzaShopLeftDoor(player)
     end
 end
 
--- Continuous function to update both destination_ids if their respective models exist
-local function continuousDestinationIdUpdate()
-    while true do
-        -- Check and update destination_id for PizzaShop
-        changePizzaShopDestinationIdToSalon()
-
-        -- Check and update destination_id for Salon
-        changeSalonDestinationIdToSchool()
-
-        wait(5)  -- Wait for 5 seconds before updating again
-    end
-end
-
 -- Function to find the School InteriorOrigin dynamically
 local function findSchoolInteriorOrigin()
     return workspace.Interiors:FindFirstChild("School") and workspace.Interiors.School:FindFirstChild("InteriorOrigin")
@@ -337,19 +322,17 @@ local function teleportToSchoolTouchToEnter(player)
     instantTeleport(player, touchToEnter.CFrame)
 end
 
--- Function to continuously find and teleport to the Salon Interior Origin
+-- Function to check and teleport to Salon Interior Origin
 local function teleportToSalonInteriorOrigin(player)
-    while true do
-        local salonInteriorOrigin = workspace.Interiors:FindFirstChild("Salon") and workspace.Interiors.Salon:FindFirstChild("InteriorOrigin")
-        if salonInteriorOrigin then
-            instantTeleport(player, salonInteriorOrigin.CFrame)
-            displayHintCountdown(100, "You have entered the Salon Shop!")
-            print("Detected Salon Interior Origin and teleported!") -- Indicate successful teleportation
-        else
-            print("Scanning for Salon Interior Origin...") -- Continuous scanning message
-        end
-        wait(1) -- Keep checking every second
-    end
+    local salonInteriorOrigin
+    repeat
+        salonInteriorOrigin = workspace.Interiors:FindFirstChild("Salon") and workspace.Interiors.Salon:FindFirstChild("InteriorOrigin")
+        wait(1)
+    until salonInteriorOrigin
+
+    instantTeleport(player, salonInteriorOrigin.CFrame)
+    displayHintCountdown(100, "You have entered the Salon Shop!")
+    print("Teleported to Salon Interior Origin.")
 end
 
 -- Teleport to Salon Main Door after entering the Salon Interior Origin
@@ -389,6 +372,29 @@ local function teleportToCampsiteOrigin(player)
     end
 end
 
+-- Function to set all Interior Origins to baseplate size and move them to the bottom
+local function resizeAndRepositionInteriorOrigins()
+    -- Loop through all the Interiors in the workspace
+    for _, interior in pairs(workspace.Interiors:GetChildren()) do
+        if interior:IsA("Model") then
+            local interiorOrigin = interior:FindFirstChild("InteriorOrigin")
+            if interiorOrigin and interiorOrigin:IsA("BasePart") then
+                -- Set Transparency and Size
+                interiorOrigin.Transparency = 0
+                interiorOrigin.Size = Vector3.new(100, 1, 100) -- Adjust size for baseplate-like dimensions
+                interiorOrigin.Position = Vector3.new(0, -1, 0) -- Move to the bottom (adjust Y as needed)
+
+                -- Ensure the part is anchored
+                interiorOrigin.Anchored = true
+                
+                print(interior.Name .. " InteriorOrigin resized and repositioned.")
+            else
+                print(interior.Name .. " does not have a valid InteriorOrigin.")
+            end
+        end
+    end
+end
+
 -- Main function to execute the teleportation sequence in loop
 local function runTeleportationSequence()
     local player = game.Players.LocalPlayer
@@ -414,7 +420,7 @@ local function runTeleportationSequence()
         teleportToPizzaShopLeftDoor(player)
         wait(1)
 
-        teleportToSalonInteriorOrigin(player) -- This will now continuously check for the Salon InteriorOrigin.
+        teleportToSalonInteriorOrigin(player) -- This will continuously check for the Salon InteriorOrigin.
         wait(1)
 
         teleportToSalonMainDoor(player)
@@ -434,8 +440,17 @@ end
 -- Start the teleportation sequences
 coroutine.wrap(runTeleportationSequence)()
 
+-- Start the interior origins resize and reposition
+resizeAndRepositionInteriorOrigins()
+
 -- Start the continuous update for destination_ids in a separate coroutine
-coroutine.wrap(continuousDestinationIdUpdate)()
+coroutine.wrap(function()
+    while true do
+        changePizzaShopDestinationIdToSalon()
+        changeSalonDestinationIdToSchool()
+        wait(5)  -- Wait for 5 seconds before updating again
+    end
+end)()
 
 
 
