@@ -68,12 +68,8 @@ task.wait("3")
 -- Flag to track subscription status
 local hasSubscribed = false
 
---pickup selected pet
-
+-- Pickup selected pet
 local pets = workspace.Pets:GetChildren()
-
--- Assuming you have a GUI where the user can select their pet
--- This part would typically be in the UI event handler
 
 -- Example: user selects the first pet for demonstration
 local userSelectedPet = pets[1] -- Replace with actual user selection logic
@@ -85,7 +81,6 @@ if userSelectedPet then
     game:GetService("ReplicatedStorage").API.HoldBaby:FireServer(unpack(args))
 else
     warn("Please select a pet.")
-
 end
 
 -- Ensure Title GUI exists
@@ -97,13 +92,12 @@ local function ensureTitleLabelExists()
         titleScreen = Instance.new("ScreenGui")
         titleScreen.Name = "TitleScreen"
         titleScreen.Parent = player.PlayerGui
-        -- Create a title label for the UI
         local titleLabel = Instance.new("TextLabel")
         titleLabel.Name = "TitleLabel"
-        titleLabel.Size = UDim2.new(1, 0, 0.1, 0) -- Full width, 10% height
-        titleLabel.Position = UDim2.new(0, 0, 0, 0) -- Top of the screen
+        titleLabel.Size = UDim2.new(1, 0, 0.1, 0)
+        titleLabel.Position = UDim2.new(0, 0, 0, 0)
         titleLabel.Text = "PET AUTOFARM V1 IN DEV"
-        titleLabel.BackgroundColor3 = Color3.fromRGB(150, 150, 255) -- Background color
+        titleLabel.BackgroundColor3 = Color3.fromRGB(150, 150, 255)
         titleLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
         titleLabel.Font = Enum.Font.SourceSansBold
         titleLabel.TextScaled = true
@@ -176,26 +170,6 @@ local function instantTeleport(player, targetCFrame)
             end
         end
     end
-end
-
---pickup selected pet
-
-local pets = workspace.Pets:GetChildren()
-
--- Assuming you have a GUI where the user can select their pet
--- This part would typically be in the UI event handler
-
--- Example: user selects the first pet for demonstration
-local userSelectedPet = pets[1] -- Replace with actual user selection logic
-
-if userSelectedPet then
-    local args = {
-        [1] = userSelectedPet
-    }
-    game:GetService("ReplicatedStorage").API.HoldBaby:FireServer(unpack(args))
-else
-    warn("Please select a pet.")
-
 end
 
 -- Function to unsubscribe from house
@@ -365,15 +339,16 @@ end
 
 -- Function to continuously find and teleport to the Salon Interior Origin
 local function teleportToSalonInteriorOrigin(player)
-    local salonInteriorOrigin
     while true do
-        salonInteriorOrigin = workspace.Interiors:FindFirstChild("Salon") and workspace.Interiors.Salon:FindFirstChild("InteriorOrigin")
+        local salonInteriorOrigin = workspace.Interiors:FindFirstChild("Salon") and workspace.Interiors.Salon:FindFirstChild("InteriorOrigin")
         if salonInteriorOrigin then
             instantTeleport(player, salonInteriorOrigin.CFrame)
             displayHintCountdown(100, "You have entered the Salon Shop!")
-            break -- Exit the loop after teleporting once
+            print("Detected Salon Interior Origin and teleported!") -- Indicate successful teleportation
+        else
+            print("Scanning for Salon Interior Origin...") -- Continuous scanning message
         end
-        wait(1)
+        wait(1) -- Keep checking every second
     end
 end
 
@@ -439,7 +414,7 @@ local function runTeleportationSequence()
         teleportToPizzaShopLeftDoor(player)
         wait(1)
 
-        teleportToSalonInteriorOrigin(player)
+        teleportToSalonInteriorOrigin(player) -- This will now continuously check for the Salon InteriorOrigin.
         wait(1)
 
         teleportToSalonMainDoor(player)
